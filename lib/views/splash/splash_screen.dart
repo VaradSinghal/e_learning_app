@@ -1,7 +1,10 @@
 import 'package:e_learning_app/bloc/auth/auth_bloc.dart';
+import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/services/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -51,11 +54,11 @@ class _SplashScreenState extends State<SplashScreen>
     final authState = context.read<AuthBloc>().state;
     if(StorageService.isFirstTime()){
       StorageService.setFirstTime(false);
-      //onboarding screen
+      Get.offNamed(AppRoutes.onboarding);
     } else if (authState.userModel != null) {
-      //home screen
+       Get.offNamed(AppRoutes.home);
     } else {
-      //login screen
+       Get.offNamed(AppRoutes.login);
     }
     }
 
