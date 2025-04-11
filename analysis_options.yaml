@@ -10,6 +10,8 @@
 analyzer:
   errors:
     unused_field: ignore
+    depend_on_referenced_packages: ignore
+    deprecated_member_use: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
