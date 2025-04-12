@@ -1,10 +1,36 @@
+import 'package:e_learning_app/core/utils/validators.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/widgets/common/custom_button.dart';
+import 'package:e_learning_app/widgets/common/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formkey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
+  }
+
+  void _handleLogin() {
+    if (_formkey.currentState!.validate()) {
+      // Perform login action
+      Get.offAllNamed(AppRoutes.home);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,55 +84,52 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const SizedBox(height: 20),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
+                  Form(
+                    key: _formkey,
+                    child: Column(
+                      children: [
+                        CustomTextfield(
+                          label: 'Email',
+                          prefixIcon: Icons.email_outlined,
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: FormValidator.validateEmail,
+                        ),
+
+                        const SizedBox(height: 20),
+                        CustomTextfield(
+                          label: 'Password',
+                          prefixIcon: Icons.lock_outline,
+                          controller: _passwordController,
+                          obscureText: true,
+                          validator: FormValidator.validatePassword,
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed:
+                                () => Get.toNamed(AppRoutes.forgotPassword),
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+                        CustomButton(text: 'Login', onPressed: _handleLogin),
+
+                        const SizedBox(height: 20),
+                      ],
                     ),
                   ),
 
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: const Icon(Icons.visibility_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () => Get.toNamed(AppRoutes.forgotPassword),
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  CustomButton(
-                    text: 'Login', 
-                    onPressed: () => Get.offAllNamed(AppRoutes.home),
-                    ),
-
-                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(child: Divider(color: Colors.grey.shade300)),
@@ -123,17 +146,14 @@ class LoginScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _socialLoginButton(
-                      icon: Icons.g_mobiledata,
-                      onPressed: (){},
-                    ),
+                        icon: Icons.g_mobiledata,
+                        onPressed: () {},
+                      ),
                       _socialLoginButton(
-                      icon: Icons.facebook,
-                      onPressed: (){},
-                    ),
-                      _socialLoginButton(
-                      icon: Icons.apple,
-                      onPressed: (){},
-                    ),
+                        icon: Icons.facebook,
+                        onPressed: () {},
+                      ),
+                      _socialLoginButton(icon: Icons.apple, onPressed: () {}),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -141,17 +161,16 @@ class LoginScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Don\'t have an account?',),
-                       
+                      Text('Don\'t have an account?'),
+
                       TextButton(
-                        onPressed: () => Get.toNamed(AppRoutes.register), 
+                        onPressed: () => Get.toNamed(AppRoutes.register),
                         child: Text(
                           'Register',
                           style: TextStyle(
                             color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,),
-                          
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -173,7 +192,7 @@ class LoginScreen extends StatelessWidget {
       icon: icon,
       isFullWidth: false,
       height: 50,
-      text: '', 
+      text: '',
       onPressed: onPressed,
       isOutlined: true,
     );

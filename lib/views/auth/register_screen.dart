@@ -112,6 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           label: 'Email',
                           prefixIcon: Icons.email_outlined,
                           controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           validator: FormValidator.validateEmail,
                         ),
                         const SizedBox(height: 20),
