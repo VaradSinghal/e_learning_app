@@ -1,9 +1,23 @@
+import 'dart:async';
+
 import 'package:e_learning_app/bloc/auth/auth_event.dart';
 import 'package:e_learning_app/bloc/auth/auth_state.dart';
+import 'package:e_learning_app/repositories/auth_repository.dart';
+import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(const AuthState()) {
+  final AuthRepository _authRepository;
+  StreamSubscription? _authStateSubscription;
+
+  AuthBloc({AuthRepository? authRepository})
+    : _authRepository = authRepository ?? AuthRepository(),
+      super(const AuthState()) {
+    _authStateSubscription = _authRepository.authStateChanges.listen(
+      (user) => add(AuthStateChanged(user)),
+    );
+
     on<AuthStateChanged>(_onAuthStateChanged);
     on<RegisterRequested>(_onRegisterRequested);
     on<LoginRequested>(_onLoginRequested);
@@ -16,29 +30,42 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthStateChanged event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthState());
+    if (event.user != null) {
+      emit(state.copyWith(userModel: event.user, isLoading: false, error: null));
+    } else {
+      emit(const AuthState());
+    }
   }
 
   Future<void> _onRegisterRequested(
     RegisterRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    
     try {
-      emit(state.copyWith(isLoading: true));
-      emit(state.copyWith(isLoading: false));
-  } catch (e) {
-      emit(state.copyWith(error: e.toString(), isLoading: false));
+      emit(state.copyWith(isLoading: true, error: null));
+      final user = await _authRepository.signUp(
+        email: event.email,
+        password: event.password,
+        fullName: event.fullName ?? 'Default Name',
+        role: event.role,
+      );
+      emit(state.copyWith(isLoading: false, userModel: user, error: null));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString(), isLoading: false, userModel: null));
     }
   }
-
 
   Future<void> _onLoginRequested(
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
     try {
-      emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(isLoading: true, error: null));
+      await _authRepository.signIn(
+        email: event.email,
+        password: event.password,
+      );
       emit(state.copyWith(isLoading: false));
     } catch (e) {
       emit(state.copyWith(error: e.toString(), isLoading: false));
@@ -50,9 +77,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
+      emit(state.copyWith(isLoading: true));
+      await _authRepository.signOut();
       emit(const AuthState());
+      Get.offAllNamed(AppRoutes.login);
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(state.copyWith(error: e.toString(),isLoading: false));
     }
   }
 
@@ -61,7 +91,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(isLoading: true,error:  null));
+      await _authRepository.updateProfile(
+        fullName: event.fullName,
+        photoUrl: event.photoUrl,
+      );
       emit(state.copyWith(isLoading: false));
     } catch (e) {
       emit(state.copyWith(error: e.toString(), isLoading: false));
@@ -73,10 +107,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      emit(state.copyWith(isLoading: true));
+      emit(state.copyWith(isLoading: true,error: null));
+      await _authRepository.resetPassword(event.email);
       emit(state.copyWith(isLoading: false));
     } catch (e) {
       emit(state.copyWith(error: e.toString(), isLoading: false));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _authStateSubscription?.cancel();
+    return super.close();
   }
 }

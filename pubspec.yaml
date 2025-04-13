@@ -47,6 +47,9 @@ dependencies:
   video_player: ^2.9.2
   chewie: 1.10.0
   package_info_plus: ^8.3.0
+  cloud_firestore: ^4.8.0
+  firebase_auth: ^4.16.0
+  firebase_core: ^2.18.0
   cupertino_icons: ^1.0.8
 
 dev_dependencies:

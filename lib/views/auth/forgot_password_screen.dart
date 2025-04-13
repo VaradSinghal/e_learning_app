@@ -1,7 +1,11 @@
+import 'package:e_learning_app/bloc/auth/auth_bloc.dart';
+import 'package:e_learning_app/bloc/auth/auth_event.dart';
+import 'package:e_learning_app/bloc/auth/auth_state.dart';
 import 'package:e_learning_app/core/utils/validators.dart';
 import 'package:e_learning_app/widgets/common/custom_button.dart';
 import 'package:e_learning_app/widgets/common/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -23,59 +27,33 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _handleResetPassword() {
     if (_formKey.currentState!.validate()) {
-      // Perform the password reset logic here
-      Get.dialog(AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.mark_email_read_outlined,
-              size: 60,
-              color: Colors.green,
-            ),
-
-             SizedBox(height: 20),
-
-             Text(
-                'Check your email',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-             ),
-            SizedBox(height: 10),
-              Text(
-                'We have sent you a password reset instructions to your email.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-
-              SizedBox(height: 20),
-              CustomButton(
-                text: 'OK',
-                onPressed: () => Get.back(),
-                height: 55,
-               
-                
-              ),
-          ],
-        ),
-      ),
-      );
       
+      context.read<AuthBloc>().add(
+            ForgotPasswordRequested(
+              email: _emailController.text,
+            ),
+          );
       
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.error != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error!), backgroundColor: Colors.red),
+          );
+        } else if (!state.isLoading && state.error == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password reset email sent successfully!'), backgroundColor: Colors.green),
+          );
+        }
+      },
+      child:
+    
+    Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -117,10 +95,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
 
             const SizedBox(height: 20),
-            CustomButton(text: 'Reset Password', onPressed: _handleResetPassword),
+           BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              return CustomButton(
+                                text: 'Reset',
+                                onPressed: _handleResetPassword,
+                                isLoading: state.isLoading,
+                                
+                              );
+                            },
+                          ),
           ],
         ),
       ),
-    );
+    ));
   }
 }

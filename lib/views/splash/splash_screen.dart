@@ -1,4 +1,5 @@
 import 'package:e_learning_app/bloc/auth/auth_bloc.dart';
+import 'package:e_learning_app/models/user_model.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/services/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -41,32 +42,35 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.forward();
 
     Future.delayed(const Duration(seconds: 3), () {
-      if (!mounted || _hasNavigated) return;  
+      if (!mounted || _hasNavigated) return;
       _handleNavigation(context);
     });
   }
 
   void _handleNavigation(BuildContext context) {
-    if(_hasNavigated) return; 
+    if (_hasNavigated) return;
     _hasNavigated = true;
 
     final authState = context.read<AuthBloc>().state;
-    if(StorageService.isFirstTime()){
-  
+    if (StorageService.isFirstTime()) {
+      StorageService.setFirstTime(false);
       Get.offNamed(AppRoutes.onboarding);
     } else if (authState.userModel != null) {
-       Get.offNamed(AppRoutes.main);
+      if (authState.userModel!.role == UserRole.teacher) {
+        Get.offNamed(AppRoutes.teacherHome);
+      } else {
+        Get.offNamed(AppRoutes.main);
+      }
     } else {
-       Get.offNamed(AppRoutes.login);
+      Get.offNamed(AppRoutes.login);
     }
-    }
+  }
 
-    @override
+  @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -109,25 +113,28 @@ class _SplashScreenState extends State<SplashScreen>
                 const SizedBox(height: 40),
                 FadeTransition(
                   opacity: _fadeAnimation,
-                child: SlideTransition(position: _slideAnimation,
-                child: Column(
-                  children: [
-                    Text('Edulearn Pro',
-                    style: theme.textTheme.displayMedium?.copyWith(
-                      color: theme.colorScheme.surface,
-                      letterSpacing: 1.5,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Edulearn Pro',
+                          style: theme.textTheme.displayMedium?.copyWith(
+                            color: theme.colorScheme.surface,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Learn Anywhere, Achieve Everywhere',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.surface.withOpacity(0.7),
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
                     ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text('Learn Anywhere, Achieve Everywhere',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.surface.withOpacity(0.7),
-                      letterSpacing: 1.2,
-                    ),
-                    ),
-                  ],
-                ),
-                ),
+                  ),
                 ),
 
                 const SizedBox(height: 60),
@@ -136,10 +143,8 @@ class _SplashScreenState extends State<SplashScreen>
                   child: CircularProgressIndicator(
                     color: theme.colorScheme.surface,
                     strokeWidth: 3,
-
                   ),
-
-                  ),
+                ),
               ],
             ),
           ),
