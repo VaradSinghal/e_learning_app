@@ -6,7 +6,7 @@ import 'package:e_learning_app/views/course/course_list/course_list_screen.dart'
 import 'package:e_learning_app/views/home/home_screen.dart';
 import 'package:e_learning_app/views/onboarding/onboarding_screen.dart';
 import 'package:e_learning_app/views/profile/profile_screen.dart';
-import 'package:e_learning_app/views/quiz/quiz_list/widgets/quiz_list_screen.dart';
+import 'package:e_learning_app/views/quiz/quiz_list/quiz_list_screen.dart';
 import 'package:e_learning_app/views/splash/splash_screen.dart';
 import 'package:e_learning_app/views/teacher/teacher_home_screen.dart';
 import 'package:flutter/material.dart';

@@ -86,7 +86,9 @@ class CourseListScreen extends StatelessWidget {
                     duration: '${course.lessons.length *30} mins',
                     isPremium: course.isPremium,
                   );
-                }),
+                },
+                childCount: courses.length,
+                ),
               ),
             ),
         ],
