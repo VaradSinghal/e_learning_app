@@ -1,5 +1,3 @@
-import 'package:e_learning_app/models/quiz.dart';
-
 class QuizAttempt {
   final String id;
   final String quizId;

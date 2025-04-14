@@ -38,7 +38,7 @@ class DummyDataService {
       description:
           'Learn professional UI/UX design from scratch using Figma and Adobe XD.',
       imageUrl:
-          'https://img.freepik.com/premium-psd/school-education-admission-youtube-thumbnail-web-banner-template_123829-103.jpg',
+          'https://img.freepik.com/premium-vector/screen-with-man-picture-man-with-picture-man-with-text-it_1114986-52.jpg?w=1380',
       instructorId: 'inst_2',
       categoryId: '2',
       price: 79.99,

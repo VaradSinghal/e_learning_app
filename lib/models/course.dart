@@ -70,7 +70,7 @@ class Course {
     'rating': rating,
     'reviewCount': reviewCount,
     'enrollmentCount': enrollmentCount,
-    'lessons': lessons.map((lesson) => lesson?.toJson()).toList(),
+    'lessons': lessons.map((lesson) => lesson.toJson()).toList(),
     'level': level,
     'requirements': requirements,
     'whatYouWillLearn': whatYouWillLearn,
