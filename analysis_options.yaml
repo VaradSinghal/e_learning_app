@@ -17,6 +17,7 @@ analyzer:
     avoid_types_as_parameter_names: ignore
     annotate_overrides: ignore
     unnecessary_brace_in_string_interps: ignore
+    unused_local_variable: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
