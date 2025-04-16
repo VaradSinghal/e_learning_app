@@ -1,4 +1,5 @@
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/services/payment_service.dart';
 import 'package:e_learning_app/views/course/payment/widgets/order_summary.dart';
 import 'package:e_learning_app/views/course/payment/widgets/payment_fields.dart';
 import 'package:e_learning_app/widgets/common/custom_button.dart';
@@ -50,24 +51,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            OrderSummary(
-              courseName: widget.courseName, 
-              price: widget.price,
-              ),
-              const SizedBox(height: 24),
-              PaymentFields(
-                formKey: _formKey,
-                cardNumberController: _cardNumberController,
-                expiryController: _expiryController,
-                cvvController: _cvvController,
-                nameController: _nameController,
-                errorStyle: _errorStyle,
-              ),
-              const SizedBox(height: 24),
-              CustomButton(
-                text: 'Pay \$${widget.price}', 
-                onPressed: (){},
-                ),
+            OrderSummary(courseName: widget.courseName, price: widget.price),
+            const SizedBox(height: 24),
+            PaymentFields(
+              formKey: _formKey,
+              cardNumberController: _cardNumberController,
+              expiryController: _expiryController,
+              cvvController: _cvvController,
+              nameController: _nameController,
+              errorStyle: _errorStyle,
+            ),
+            const SizedBox(height: 24),
+            CustomButton(
+              text: 'Pay \$${widget.price}',
+              onPressed:
+                  () => PaymentService.processPayment(
+                    formKey: _formKey,
+                    courseId: widget.courseId,
+                  ),
+                  isLoading: false,
+                  height: 56,
+            ),
           ],
         ),
       ),
