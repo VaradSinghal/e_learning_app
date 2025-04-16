@@ -137,7 +137,22 @@ class CourseInfoCard extends StatelessWidget {
 
     return Padding(padding: EdgeInsets.only(left: 8, bottom: 4),
     child: Row(
-      
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(
+          Icons.check_circle,
+          color: AppColors.primary,
+          size: 16,
+        ),
+        const SizedBox(width: 8),
+        Expanded(child: Text(
+          item,
+          style: theme.textTheme.bodyMedium,
+
+          
+        ),
+        ),
+      ],
     ),
     );
   }

@@ -23,7 +23,7 @@ class AppRoutes {
   static const String home = '/home';
 
   static const String courseList = '/courses';
-  static const String courseDetail = '/courses/:id';
+  static const String courseDetail = '/course/:id';
 
   static const String quizList = '/quizzes';
 
