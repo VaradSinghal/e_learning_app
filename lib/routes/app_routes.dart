@@ -4,6 +4,7 @@ import 'package:e_learning_app/views/auth/login_screen.dart';
 import 'package:e_learning_app/views/auth/register_screen.dart';
 import 'package:e_learning_app/views/course/course_detail/course_detail_screen.dart';
 import 'package:e_learning_app/views/course/course_list/course_list_screen.dart';
+import 'package:e_learning_app/views/course/payment/payment_screen.dart';
 import 'package:e_learning_app/views/home/home_screen.dart';
 import 'package:e_learning_app/views/onboarding/onboarding_screen.dart';
 import 'package:e_learning_app/views/profile/profile_screen.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
 
   static const String courseList = '/courses';
   static const String courseDetail = '/course/:id';
+  static const String payment = '/payment';
 
   static const String quizList = '/quizzes';
 
@@ -85,6 +87,13 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const QuizListScreen());
       case profile:
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      case payment:
+        final args = settings.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(builder: (_) => PaymentScreen(
+          courseId: args['courseId'] ?? '',
+          courseName: args['courseName'] ?? '',
+          price: args['price'] ?? 0.0,
+        ));
 
       default:
         return MaterialPageRoute(
