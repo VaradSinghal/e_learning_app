@@ -1,4 +1,7 @@
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/services/dummy_data_service.dart';
 import 'package:e_learning_app/views/course/course_detail/widgets/lesson_tile.dart';
 import 'package:flutter/material.dart';
@@ -42,19 +45,30 @@ class LessonsList extends StatelessWidget {
           isUnlocked: isUnlocked,
           onTap: () async {
             if (course.isPremium && !isUnlocked) {
-              Get.snackbar('Premium Course', 'Please purchase to access all lessons',
-              backgroundColor: AppColors.primary,
-              colorText: Colors.white,
-              duration: const Duration(seconds: 3),
+              Get.snackbar(
+                'Premium Course',
+                'Please purchase to access all lessons',
+                backgroundColor: AppColors.primary,
+                colorText: Colors.white,
+                duration: const Duration(seconds: 3),
               );
-            } else if (isLocked){
-              Get.snackbar('Lesson Locked', 'Please complete the previous lesson first',
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
-              duration: const Duration(seconds: 3),
+            } else if (isLocked) {
+              Get.snackbar(
+                'Lesson Locked',
+                'Please complete the previous lesson first',
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+                duration: const Duration(seconds: 3),
               );
             } else {
-              
+              final result = await Get.toNamed(
+                AppRoutes.lesson.replaceAll(':id', lesson.id),
+                parameters: {'courseId': courseId},
+              );
+
+              if (result == true) {
+                onLessonComplete?.call();
+              }
             }
           },
         );
