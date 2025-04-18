@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
-
 import 'package:e_learning_app/core/theme/app_colors.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/services/dummy_data_service.dart';

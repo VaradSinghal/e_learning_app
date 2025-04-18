@@ -18,6 +18,7 @@ analyzer:
     annotate_overrides: ignore
     unnecessary_brace_in_string_interps: ignore
     unused_local_variable: ignore
+    unnecessary_null_comparison: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
