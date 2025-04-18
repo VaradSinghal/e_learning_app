@@ -17,7 +17,7 @@ import 'package:e_learning_app/views/quiz/quiz_attempt/quiz_attempt_screen.dart'
 import 'package:e_learning_app/views/quiz/quiz_list/quiz_list_screen.dart';
 import 'package:e_learning_app/views/quiz/quiz_result/quiz_result_screen.dart';
 import 'package:e_learning_app/views/splash/splash_screen.dart';
-import 'package:e_learning_app/views/teacher/teacher_home_screen.dart';
+import 'package:e_learning_app/views/teacher/teacher_home/teacher_home_screen.dart';
 import 'package:get/get.dart';
 
 class AppPages {
