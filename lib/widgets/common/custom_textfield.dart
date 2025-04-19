@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 class CustomTextfield extends StatefulWidget {
   final String label;
   final String? hint;
+  final String? initialValue;
   final IconData? prefixIcon;
   final IconData? suffixIcon;
   final bool obscureText;
@@ -16,41 +17,40 @@ class CustomTextfield extends StatefulWidget {
   final FocusNode? focusNode;
 
   const CustomTextfield({
-    super.key, 
-    required this.label, 
-    this.hint, 
-    this.prefixIcon, 
-    this.suffixIcon, 
-    this.obscureText = false, 
-    this.controller, 
-    this.validator, 
-    this.keyboardType, 
-    this.onChanged, 
-    this.maxLines= 1, 
-    this.enabled = true, 
-    this.focusNode,
-    });
+    super.key,
+    required this.label,
+    this.hint,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.obscureText = false,
+    this.controller,
+    this.validator,
+    this.keyboardType,
+    this.onChanged,
+    this.maxLines = 1,
+    this.enabled = true,
+    this.focusNode, 
+    this.initialValue,
+  });
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
 }
 
 class _CustomTextfieldState extends State<CustomTextfield> {
-
   bool _obscureText = false;
 
   @override
   void initState() {
-    
     super.initState();
     _obscureText = widget.obscureText;
   }
-
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      initialValue: widget.initialValue,
       obscureText: _obscureText,
       validator: widget.validator,
       keyboardType: widget.keyboardType,
@@ -62,39 +62,45 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         labelText: widget.label,
         hintText: widget.hint,
         prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
-        suffixIcon: widget.obscureText ? IconButton(
-          onPressed: (){
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-           icon: Icon(_obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined)) : widget.suffixIcon != null ? Icon(widget.suffixIcon) : null,
-            
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          
-        ),
-            
+        suffixIcon:
+            widget.obscureText
+                ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  icon: Icon(
+                    _obscureText
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                  ),
+                )
+                : widget.suffixIcon != null
+                ? Icon(widget.suffixIcon)
+                : null,
+
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.grey.shade300),
         ),
-            
+
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Theme.of(context).primaryColor),
         ),
-            
+
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:const BorderSide(color: Colors.red),
+          borderSide: const BorderSide(color: Colors.red),
         ),
-            
+
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:const BorderSide(color: Colors.red),
+          borderSide: const BorderSide(color: Colors.red),
         ),
-       
       ),
     );
   }

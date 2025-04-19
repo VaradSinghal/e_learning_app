@@ -5,6 +5,7 @@ import 'package:e_learning_app/views/auth/register_screen.dart';
 import 'package:e_learning_app/views/chat/chat_list_screen.dart';
 import 'package:e_learning_app/views/course/course_detail/course_detail_screen.dart';
 import 'package:e_learning_app/views/course/course_list/course_list_screen.dart';
+import 'package:e_learning_app/views/course/create_course/create_course_screen.dart';
 import 'package:e_learning_app/views/course/lesson_screen/lesson_screen.dart';
 import 'package:e_learning_app/views/course/payment/payment_screen.dart';
 import 'package:e_learning_app/views/home/home_screen.dart';
@@ -43,6 +44,7 @@ class AppRoutes {
   static const String teacherHome = '/teacher/home';
   static const String myCourses = '/teacher/courses';
   static const String teacherChats = '/teacher/chats';
+  static const String createCourse = '/teacher/courses/create';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -62,6 +64,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const TeacherHomeScreen());
       case myCourses:
         return MaterialPageRoute(builder: (_) => const MyCoursesScreen());
+      case createCourse:
+        return MaterialPageRoute(builder: (_) => const CreateCourseScreen());
       case teacherChats:
         return MaterialPageRoute(builder: (_) => const ChatListScreen());
       case main:
