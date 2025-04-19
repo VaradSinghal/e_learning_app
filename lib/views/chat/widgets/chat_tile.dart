@@ -1,6 +1,8 @@
 import 'package:e_learning_app/core/theme/app_colors.dart';
 import 'package:e_learning_app/models/chat_message.dart';
+import 'package:e_learning_app/views/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 
 class ChatTile extends StatelessWidget {
   final ChatMessage lastMessage;
@@ -11,7 +13,13 @@ class ChatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => Get.to(()=>ChatScreen(
+        courseId: lastMessage.courseId, 
+        instructorId: lastMessage.receiverId, 
+        isTeacherView: true,
+        studentName: studentName,
+        ),
+         ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
