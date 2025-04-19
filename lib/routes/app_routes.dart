@@ -16,6 +16,7 @@ import 'package:e_learning_app/views/quiz/quiz_attempt/quiz_attempt_screen.dart'
 import 'package:e_learning_app/views/quiz/quiz_list/quiz_list_screen.dart';
 import 'package:e_learning_app/views/splash/splash_screen.dart';
 import 'package:e_learning_app/views/teacher/my_courses/my_courses_screen.dart';
+import 'package:e_learning_app/views/teacher/teacher_analytics/teacher_analytics_screen.dart';
 import 'package:e_learning_app/views/teacher/teacher_home/teacher_home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -45,6 +46,7 @@ class AppRoutes {
   static const String myCourses = '/teacher/courses';
   static const String teacherChats = '/teacher/chats';
   static const String createCourse = '/teacher/courses/create';
+  static const String teacherAnalytics = '/teacher/analytics';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -68,6 +70,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const CreateCourseScreen());
       case teacherChats:
         return MaterialPageRoute(builder: (_) => const ChatListScreen());
+      case teacherAnalytics:
+        return MaterialPageRoute(builder: (_) => const TeacherAnalyticsScreen());
       case main:
         return MaterialPageRoute(
           builder:
