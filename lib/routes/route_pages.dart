@@ -5,6 +5,7 @@ import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/views/auth/forgot_password_screen.dart';
 import 'package:e_learning_app/views/auth/login_screen.dart';
 import 'package:e_learning_app/views/auth/register_screen.dart';
+import 'package:e_learning_app/views/chat/chat_list_screen.dart';
 import 'package:e_learning_app/views/course/course_detail/course_detail_screen.dart';
 import 'package:e_learning_app/views/course/course_list/course_list_screen.dart';
 import 'package:e_learning_app/views/course/lesson_screen/lesson_screen.dart';
@@ -54,6 +55,10 @@ class AppPages {
       GetPage(
       name: AppRoutes.myCourses,
       page: () => const MyCoursesScreen(),
+      ),
+      GetPage(
+      name: AppRoutes.teacherChats,
+      page: () => const ChatListScreen(),
       ),
       GetPage(
       name: AppRoutes.main,
