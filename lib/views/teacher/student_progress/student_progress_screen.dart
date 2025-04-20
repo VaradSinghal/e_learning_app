@@ -44,7 +44,12 @@ class StudentProgressScreen extends StatelessWidget {
         final completionRate =
             engagement.courseCompletionRates[courseName] ?? 0.0;
 
-        return PerformanceCard();
+        return PerformanceCard(
+          courseName: courseName,
+          completionRate: completionRate,
+          averageTimePerLesson: engagement.averageTimePerLesson,
+          averageCompletionRate: engagement.averageCompletionRate,
+        );
       },
     );
   }
