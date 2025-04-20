@@ -1,6 +1,7 @@
 import 'package:e_learning_app/bloc/font/font_bloc.dart';
 import 'package:e_learning_app/bloc/font/font_event.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/services/font_service.dart';
 import 'package:e_learning_app/views/settings/widgets/setting_tile.dart';
 import 'package:e_learning_app/views/settings/widgets/settings_section.dart';
@@ -85,7 +86,7 @@ class SettingsScreen extends StatelessWidget {
                   SettingTile(
                     title: 'Privacy Policy',
                     icon: Icons.privacy_tip_outlined,
-                    onTap: () {},
+                    onTap: () => Get.toNamed(AppRoutes.privacyPolicy),
                   ),
                   SettingTile(
                     title: 'Terms of Service',
@@ -107,7 +108,7 @@ class SettingsScreen extends StatelessWidget {
                           FontService.fontSizeScales.keys
                               .map(
                                 (e) =>
-                                    DropdownMenuItem(child: Text(e), value: e),
+                                    DropdownMenuItem(value: e, child: Text(e)),
                               )
                               .toList(),
                       onChanged: (value) async {
@@ -131,7 +132,7 @@ class SettingsScreen extends StatelessWidget {
                           FontService.availableFonts.keys
                               .map(
                                 (e) =>
-                                    DropdownMenuItem(child: Text(e), value: e),
+                                    DropdownMenuItem(value: e, child: Text(e)),
                               )
                               .toList(),
                       onChanged: (value) async {

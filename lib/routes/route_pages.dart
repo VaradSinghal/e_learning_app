@@ -15,6 +15,7 @@ import 'package:e_learning_app/views/course/payment/payment_screen.dart';
 import 'package:e_learning_app/views/home/home_screen.dart';
 import 'package:e_learning_app/views/notifications/notifications_screen.dart';
 import 'package:e_learning_app/views/onboarding/onboarding_screen.dart';
+import 'package:e_learning_app/views/privacy_&_terms_conditions/privacy_policy_screen.dart';
 import 'package:e_learning_app/views/profile/edit_profile_screen.dart';
 import 'package:e_learning_app/views/profile/profile_screen.dart';
 import 'package:e_learning_app/views/quiz/quiz_attempt/quiz_attempt_screen.dart';
@@ -129,6 +130,10 @@ class AppPages {
       GetPage(
       name: AppRoutes.setting,
       page: () => const SettingsScreen(),
+      ),
+      GetPage(
+      name: AppRoutes.privacyPolicy,
+      page: () => const PrivacyPolicyScreen(),
       ),
       GetPage(
       name: AppRoutes.analytics,
