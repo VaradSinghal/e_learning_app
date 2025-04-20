@@ -9,6 +9,7 @@ import 'package:e_learning_app/views/course/course_list/course_list_screen.dart'
 import 'package:e_learning_app/views/course/create_course/create_course_screen.dart';
 import 'package:e_learning_app/views/course/lesson_screen/lesson_screen.dart';
 import 'package:e_learning_app/views/course/payment/payment_screen.dart';
+import 'package:e_learning_app/views/help_and_support/help_and_support_screen.dart';
 import 'package:e_learning_app/views/home/home_screen.dart';
 import 'package:e_learning_app/views/notifications/notifications_screen.dart';
 import 'package:e_learning_app/views/onboarding/onboarding_screen.dart';
@@ -52,6 +53,7 @@ class AppRoutes {
   static const String setting = '/setting';
   static const String privacyPolicy = '/privacy-policy';
   static const String termsConditions = '/terms-conditions';
+  static const String helpSupport = '/help-support';
 
   static const String teacherHome = '/teacher/home';
   static const String myCourses = '/teacher/courses';
@@ -139,6 +141,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen());
       case termsConditions:
         return MaterialPageRoute(builder: (_) => const TermsConditionsScreen());
+      case helpSupport:
+        return MaterialPageRoute(builder: (_) => const HelpAndSupportScreen());
       case analytics:
         return MaterialPageRoute(builder: (_) =>  AnalyticsDashboardScreen());
       case payment:
