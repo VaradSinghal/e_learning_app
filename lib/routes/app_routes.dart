@@ -3,6 +3,7 @@ import 'package:e_learning_app/views/auth/forgot_password_screen.dart';
 import 'package:e_learning_app/views/auth/login_screen.dart';
 import 'package:e_learning_app/views/auth/register_screen.dart';
 import 'package:e_learning_app/views/chat/chat_list_screen.dart';
+import 'package:e_learning_app/views/course/analytics_dashboard/analytics_dashboard_screen.dart';
 import 'package:e_learning_app/views/course/course_detail/course_detail_screen.dart';
 import 'package:e_learning_app/views/course/course_list/course_list_screen.dart';
 import 'package:e_learning_app/views/course/create_course/create_course_screen.dart';
@@ -34,6 +35,7 @@ class AppRoutes {
   static const String courseList = '/courses';
   static const String courseDetail = '/course/:id';
   static const String payment = '/payment';
+  static const String analytics= '/analytics';
   static const String lesson = '/lesson/:id';
 
   static const String quizList = '/quizzes';
@@ -121,6 +123,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ProfileScreen());
       case notifications:
         return MaterialPageRoute(builder: (_) => const NotificationsScreen());
+      case analytics:
+        return MaterialPageRoute(builder: (_) =>  AnalyticsDashboardScreen());
       case payment:
         final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
