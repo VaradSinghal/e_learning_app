@@ -15,6 +15,7 @@ import 'package:e_learning_app/views/course/payment/payment_screen.dart';
 import 'package:e_learning_app/views/home/home_screen.dart';
 import 'package:e_learning_app/views/notifications/notifications_screen.dart';
 import 'package:e_learning_app/views/onboarding/onboarding_screen.dart';
+import 'package:e_learning_app/views/profile/edit_profile_screen.dart';
 import 'package:e_learning_app/views/profile/profile_screen.dart';
 import 'package:e_learning_app/views/quiz/quiz_attempt/quiz_attempt_screen.dart';
 import 'package:e_learning_app/views/quiz/quiz_list/quiz_list_screen.dart';
@@ -115,6 +116,10 @@ class AppPages {
       GetPage(
       name: AppRoutes.profile,
       page: () => const ProfileScreen(),
+      ),
+      GetPage(
+      name: AppRoutes.editProfile,
+      page: () => const EditProfileScreen(),
       ),
       GetPage(
       name: AppRoutes.notifications,
