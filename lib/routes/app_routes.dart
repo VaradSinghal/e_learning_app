@@ -16,6 +16,7 @@ import 'package:e_learning_app/views/profile/edit_profile_screen.dart';
 import 'package:e_learning_app/views/profile/profile_screen.dart';
 import 'package:e_learning_app/views/quiz/quiz_attempt/quiz_attempt_screen.dart';
 import 'package:e_learning_app/views/quiz/quiz_list/quiz_list_screen.dart';
+import 'package:e_learning_app/views/settings/settings_screen.dart';
 import 'package:e_learning_app/views/splash/splash_screen.dart';
 import 'package:e_learning_app/views/teacher/my_courses/my_courses_screen.dart';
 import 'package:e_learning_app/views/teacher/student_progress/student_progress_screen.dart';
@@ -46,6 +47,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
   static const String notifications = '/notifications';
+  static const String setting = '/setting';
 
   static const String teacherHome = '/teacher/home';
   static const String myCourses = '/teacher/courses';
@@ -127,6 +129,8 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const EditProfileScreen());
       case notifications:
         return MaterialPageRoute(builder: (_) => const NotificationsScreen());
+      case setting:
+        return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case analytics:
         return MaterialPageRoute(builder: (_) =>  AnalyticsDashboardScreen());
       case payment:
