@@ -91,7 +91,7 @@ class SettingsScreen extends StatelessWidget {
                   SettingTile(
                     title: 'Terms of Service',
                     icon: Icons.description_outlined,
-                    onTap: () {},
+                    onTap: () => Get.toNamed(AppRoutes.termsConditions ),
                   ),
                 ],
               ),

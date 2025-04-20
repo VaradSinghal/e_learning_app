@@ -24,7 +24,7 @@ class LegalDocumentSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          title,
+          content,
           style: theme.textTheme.bodyMedium?.copyWith(
             height: 1.5,
           ),
