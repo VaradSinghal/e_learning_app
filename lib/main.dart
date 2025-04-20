@@ -2,18 +2,18 @@ import 'package:e_learning_app/bloc/auth/auth_bloc.dart';
 import 'package:e_learning_app/bloc/auth/auth_state.dart';
 import 'package:e_learning_app/bloc/font/font_bloc.dart';
 import 'package:e_learning_app/bloc/font/font_state.dart';
+import 'package:e_learning_app/config/firebase_config.dart';
 import 'package:e_learning_app/core/theme/app_theme.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:e_learning_app/routes/route_pages.dart';
 import 'package:e_learning_app/services/storage_service.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await FirebaseConfig.init();
   await StorageService.init();
   runApp(const MyApp());
 }

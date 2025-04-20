@@ -9,6 +9,7 @@ class AuthRepository {
   AuthRepository({FirebaseAuth? firebaseAuth, FirebaseFirestore? firestore})
     : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
       _firestore = firestore ?? FirebaseFirestore.instance;
+      
   Stream<UserModel?> get authStateChanges {
     return _firebaseAuth.authStateChanges().asyncMap((user) async {
       if (user == null) return null;
