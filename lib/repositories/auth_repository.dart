@@ -9,7 +9,7 @@ class AuthRepository {
   AuthRepository({FirebaseAuth? firebaseAuth, FirebaseFirestore? firestore})
     : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
       _firestore = firestore ?? FirebaseFirestore.instance;
-      
+
   Stream<UserModel?> get authStateChanges {
     return _firebaseAuth.authStateChanges().asyncMap((user) async {
       if (user == null) return null;
@@ -55,11 +55,11 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final UserCredential = await _firebaseAuth.signInWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      final doc = await _firestore.collection('users').doc(UserCredential.user!.uid).get();
+      final doc = await _firestore.collection('users').doc(userCredential.user!.uid).get();
       if (!doc.exists) {
         throw Exception('User not found');
       } 

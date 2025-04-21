@@ -27,13 +27,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _handleResetPassword() {
     if (_formKey.currentState!.validate()) {
-      
       context.read<AuthBloc>().add(
-            ForgotPasswordRequested(
-              email: _emailController.text,
-            ),
-          );
-      
+        ForgotPasswordRequested(email: _emailController.text),
+      );
     }
   }
 
@@ -47,67 +43,68 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           );
         } else if (!state.isLoading && state.error == null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password reset email sent successfully!'), backgroundColor: Colors.green),
+            const SnackBar(
+              content: Text('Password reset email sent successfully!'),
+              backgroundColor: Colors.green,
+            ),
           );
         }
       },
-      child:
-    
-    Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          ),
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Forgot Password',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Enter your email address to reset your password',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+
+              const SizedBox(height: 10),
+              Form(
+                key: _formKey,
+                child: CustomTextfield(
+                  label: 'Email',
+                  prefixIcon: Icons.email_outlined,
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: FormValidator.validateEmail,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  return CustomButton(
+                    text: 'Reset',
+                    onPressed: _handleResetPassword,
+                    isLoading: state.isLoading,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Forgot Password',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Enter your email address to reset your password',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-
-            const SizedBox(height: 10),
-            Form(
-              key: _formKey,
-              child: CustomTextfield(
-                label: 'Email',
-                prefixIcon: Icons.email_outlined,
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                validator: FormValidator.validateEmail,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-           BlocBuilder<AuthBloc, AuthState>(
-                            builder: (context, state) {
-                              return CustomButton(
-                                text: 'Reset',
-                                onPressed: _handleResetPassword,
-                                isLoading: state.isLoading,
-                                
-                              );
-                            },
-                          ),
-          ],
-        ),
-      ),
-    ));
+    );
   }
 }

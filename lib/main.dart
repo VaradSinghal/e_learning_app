@@ -2,6 +2,7 @@ import 'package:e_learning_app/bloc/auth/auth_bloc.dart';
 import 'package:e_learning_app/bloc/auth/auth_state.dart';
 import 'package:e_learning_app/bloc/font/font_bloc.dart';
 import 'package:e_learning_app/bloc/font/font_state.dart';
+import 'package:e_learning_app/bloc/profile/profile_bloc.dart';
 import 'package:e_learning_app/config/firebase_config.dart';
 import 'package:e_learning_app/core/theme/app_theme.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
@@ -24,27 +25,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<FontBloc>(
-          create: (context) => FontBloc(),
-          ),
-          BlocProvider<AuthBloc>(
-            create: (context)=> AuthBloc(),
-            ),
+        BlocProvider<FontBloc>(create: (context) => FontBloc()),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        BlocProvider<ProfileBloc>(create: (context) => ProfileBloc(
+          authBloc: context.read<AuthBloc>(),
+        )),
       ],
-      child:BlocListener<AuthBloc,AuthState>(
+      child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if(state.error != null){
-           ScaffoldMessenger.of(context).showSnackBar(
+          if (state.error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error!),
                 backgroundColor: Colors.red,
-               
               ),
             );
           }
         },
-        child: BlocBuilder<FontBloc,FontState>(
-          builder: (context, FontState){
+        child: BlocBuilder<FontBloc, FontState>(
+          builder: (context, FontState) {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'E-Learning App',
@@ -53,8 +52,8 @@ class MyApp extends StatelessWidget {
               initialRoute: AppRoutes.splash,
               getPages: AppPages.pages,
             );
-          }
-          ),
+          },
+        ),
       ),
     );
   }
