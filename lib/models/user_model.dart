@@ -5,6 +5,8 @@ class UserModel {
   final String email;
   final String? fullName;
   final String? photoUrl;
+  final String? phoneNumber;
+  final String? bio;
   final DateTime createdAt;
   final DateTime? lastLoginAt;
   final UserRole role;
@@ -14,6 +16,8 @@ class UserModel {
     required this.email,
     this.fullName,
     this.photoUrl,
+    this.phoneNumber,
+    this.bio,
     required this.createdAt,
     required this.lastLoginAt,
     required this.role,
@@ -26,6 +30,8 @@ class UserModel {
       email: data['email'] ?? '',
       fullName: data['fullName'],
       photoUrl: data['photoUrl'],
+      phoneNumber: data['phoneNumber'],
+      bio: data['bio'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       lastLoginAt: (data['lastLoginAt'] as Timestamp?)?.toDate(),
       role: UserRole.values.firstWhere(
@@ -35,19 +41,18 @@ class UserModel {
     );
   }
 
-  Map<String,dynamic> toFirestore() {
+  Map<String, dynamic> toFirestore() {
     return {
       'email': email,
       'fullName': fullName,
       'photoUrl': photoUrl,
+      'phoneNumber': phoneNumber,
+      'bio': bio,
       'createdAt': Timestamp.fromDate(createdAt),
-      'lastLoginAt':Timestamp.fromDate(lastLoginAt!),
+      'lastLoginAt': Timestamp.fromDate(lastLoginAt!),
       'role': role.name,
     };
   }
 }
 
-enum UserRole {
-  student,
-  teacher,
-}
+enum UserRole { student, teacher }

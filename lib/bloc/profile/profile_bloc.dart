@@ -41,6 +41,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           fullName: userModel.fullName ?? '',
           email: userModel.email,
           photoUrl: userModel.photoUrl,
+          phoneNumber: userModel.phoneNumber,
+          bio: userModel.bio,
           stats: const ProfileStats(
             coursesCount: 0,
             hoursSpent: 0,
@@ -64,12 +66,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       await _authRepository.updateProfile(
         fullName: event.fullName,
         photoUrl: event.photoUrl,
+        phoneNumber: event.phoneNumber,
+        bio: event.bio,
       );
 
       if (state.profile != null) {
         final updatedProfile = state.profile!.copyWith(
           fullName: event.fullName,
           photoUrl: event.photoUrl,
+          phoneNumber: event.phoneNumber,
+          bio: event.bio,
         );
         emit(state.copywith(isLoading: false, profile: updatedProfile));
       }

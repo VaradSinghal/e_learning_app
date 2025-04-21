@@ -89,6 +89,8 @@ class AuthRepository {
   Future<void> updateProfile({
      String? fullName,
     String? photoUrl,
+    String? phoneNumber,
+    String? bio,
   }) async {
     try {
       final user = _firebaseAuth.currentUser;
@@ -100,11 +102,7 @@ class AuthRepository {
       if (photoUrl != null) {
         await user.updatePhotoURL(photoUrl);
       }
-      await user.updateProfile(displayName: fullName, photoURL: photoUrl);
-      await _firestore.collection('users').doc(user.uid).update({
-        'fullName': fullName,
-        'photoUrl': photoUrl,
-      });
+     
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     }
