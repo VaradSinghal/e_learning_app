@@ -100,7 +100,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (event.photoPath == null) {
         throw Exception('Photo path cannot be null');
       }
-      final photoUrl = await _cloudinaryService.uploadImage(event.photoPath!);
+      final photoUrl = await _cloudinaryService.uploadImage(event.photoPath!, 'profile_pictures');
 
       add(UpdateProfileRequested(photoUrl: photoUrl));
       emit(state.copywith(isPhotoUploading: false));

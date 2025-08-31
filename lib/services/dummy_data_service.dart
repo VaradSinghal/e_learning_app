@@ -279,7 +279,6 @@ class DummyDataService {
         duration: 30,
         resources: _createDummyResources(),
         isPreview: true,
-        isLocked: false,
       ),
       _createLesson('2', 'Dart Programming Basics', false, false),
       _createLesson('3', 'Building UI with Widgets', false, false),
@@ -374,8 +373,6 @@ class DummyDataService {
       duration: 30,
       resources: _createDummyResources(),
       isPreview: isPreview,
-      isLocked: !isPreview,
-      isCompleted: isCompleted,
     );
   }
 
@@ -415,7 +412,7 @@ class DummyDataService {
 
   static bool isCourseCompleted(String courseId) {
     final course = getCourseById(courseId);
-    return course.lessons.every((lesson) => lesson.isCompleted);
+    return false;
   }
 
   static List<Question> _createFlutterQuizQuestions() {
@@ -693,10 +690,7 @@ class DummyDataService {
       final lessonIndex = course.lessons.indexWhere((l) => l.id == lessonId);
 
       if (lessonIndex != -1) {
-        var updatedLesson = course.lessons[lessonIndex].copyWith(
-          isCompleted: isCompleted ?? course.lessons[lessonIndex].isCompleted,
-          isLocked: isLocked ?? course.lessons[lessonIndex].isLocked,
-        );
+        var updatedLesson = course.lessons[lessonIndex];
         courses[courseIndex].lessons[lessonIndex] = updatedLesson;
       }
     }
@@ -704,20 +698,7 @@ class DummyDataService {
 
   static bool isLessonCompleted(String courseId, String lessonId) {
     final course = getCourseById(courseId);
-    return course.lessons
-        .firstWhere(
-          (l) => l.id == lessonId,
-          orElse:
-              () => Lesson(
-                id: '',
-                title: '',
-                description: '',
-                videoUrl: '',
-                duration: 0,
-                resources: [],
-              ),
-        )
-        .isCompleted;
+    return false;
   }
 }
 
@@ -789,6 +770,16 @@ class StudentProgress {
     return quizScores.reduce((a, b) => a + b) / quizScores.length / 100;
   }
 
-   StudentProgress({required this.studentId, required this.studentName, required this.courseId, required this.courseName, required this.progress, required this.lastActive, required this.quizScores, required this.completedLessons, required this.totalLessons, required this.averageTimePerLesson});
-  
+  StudentProgress({
+    required this.studentId,
+    required this.studentName,
+    required this.courseId,
+    required this.courseName,
+    required this.progress,
+    required this.lastActive,
+    required this.quizScores,
+    required this.completedLessons,
+    required this.totalLessons,
+    required this.averageTimePerLesson,
+  });
 }

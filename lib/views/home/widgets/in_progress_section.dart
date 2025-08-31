@@ -16,8 +16,8 @@ class InProgressSection extends StatelessWidget {
         DummyDataService.courses
             .where(
               (course) =>
-                  course.lessons.any((lesson) => lesson.isCompleted) &&
-                  !course.lessons.every((lesson) => lesson.isCompleted),
+                  course.lessons.any((lesson) => false) &&
+                  !course.lessons.every((lesson) => false),
             )
             .toList();
     return Column(
@@ -36,7 +36,7 @@ class InProgressSection extends StatelessWidget {
           children:
               inProgressCourses.map((course) {
                 final completedLessons =
-                    course.lessons.where((lesson) => lesson.isCompleted).length;
+                    course.lessons.where((lesson) => false).length;
                 final totalLessons = course.lessons.length;
                 final progress = completedLessons / totalLessons;
 
