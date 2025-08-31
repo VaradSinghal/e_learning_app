@@ -34,7 +34,7 @@ class UpdateProfileRequested extends ProfileEvent {
 class UpdateProfilePhotoRequested extends ProfileEvent {
   final String? photoPath;
 
-  const UpdateProfilePhotoRequested({this.photoPath});
+  const UpdateProfilePhotoRequested(String path, {this.photoPath});
 
   @override
   List<Object?> get props => [photoPath];

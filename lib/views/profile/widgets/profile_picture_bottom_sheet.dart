@@ -1,8 +1,24 @@
+import 'package:e_learning_app/bloc/profile/profile_bloc.dart';
+import 'package:e_learning_app/bloc/profile/profile_event.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePictureBottomSheet extends StatelessWidget {
   const ProfilePictureBottomSheet({super.key});
+
+  Future<void> _pickImage(BuildContext context, ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      if (!context.mounted) return;
+
+      Navigator.pop(context);
+      final bloc = context.read<ProfileBloc>();
+      bloc.add(UpdateProfilePhotoRequested(pickedFile.path));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,44 +39,31 @@ class ProfilePictureBottomSheet extends StatelessWidget {
           ListTile(
             leading: const CircleAvatar(
               backgroundColor: AppColors.primary,
-              child: Icon(
-                Icons.photo_library,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.photo_library, color: Colors.white),
             ),
             title: const Text('Choose from Gallery'),
-            onTap: (){
-              Navigator.pop(context);
-            },
+            onTap: () => _pickImage(context, ImageSource.gallery),
           ),
           const SizedBox(height: 8),
           ListTile(
             leading: const CircleAvatar(
               backgroundColor: AppColors.primary,
-              child: Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.camera_alt, color: Colors.white),
             ),
             title: const Text('Take a Photo'),
-            onTap: (){
-              Navigator.pop(context);
-            },
+            onTap: () => _pickImage(context, ImageSource.camera),
           ),
           const SizedBox(height: 8),
-           ListTile(
+          ListTile(
             leading: const CircleAvatar(
               backgroundColor: AppColors.primary,
-              child: Icon(
-                Icons.delete_outline,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.delete_outline, color: Colors.white),
             ),
-            title: const Text('Remove Current Photo',
-            style: TextStyle(
-              color: AppColors.error,
-            ),),
-            onTap: (){
+            title: const Text(
+              'Remove Current Photo',
+              style: TextStyle(color: AppColors.error),
+            ),
+            onTap: () {
               Navigator.pop(context);
             },
           ),

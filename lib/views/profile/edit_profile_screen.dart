@@ -1,4 +1,5 @@
 import 'package:e_learning_app/bloc/profile/profile_bloc.dart';
+import 'package:e_learning_app/bloc/profile/profile_event.dart';
 import 'package:e_learning_app/bloc/profile/profile_state.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
 import 'package:e_learning_app/views/profile/widgets/edit_profile_app_bar.dart';
@@ -44,13 +45,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
   }
 
+  void _handleSave() {
+    if (_formKey.currentState!.validate()) {
+      context.read<ProfileBloc>().add(
+        UpdateProfileRequested(
+          fullName: _fullNameController.text.trim(),
+          phoneNumber: _phoneController.text.trim(),
+          bio: _bioController.text.trim(),
+        ),
+      );
+
+      context
+          .read<ProfileBloc>()
+          .stream
+          .firstWhere((state) => !state.isLoading)
+          .then((_) => Get.back());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         final profile = state.profile;
 
-        if(profile == null) {
+        if (profile == null) {
           return const Scaffold();
         }
 
@@ -94,25 +113,47 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   width: 3,
                                 ),
                               ),
-                              child: state.isPhotoUploading ? 
-                              Shimmer.fromColors(
-                                baseColor: AppColors.primary.withOpacity(0.3), 
-                                highlightColor: AppColors.accent,
-                                child: const CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 60,
-                                ),
-                                ) : CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: AppColors.accent,
-                                  backgroundImage: profile.photoUrl != null
-                                      ? NetworkImage(profile.photoUrl!)
-                                      : null,
-                                      child: profile.photoUrl == null ? Text(profile.fullName.split(' ').map((e)=> e[0]).take(2).join().toUpperCase(), style:Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.bold, 
-                                      ) ) : null,
-                                ),
+                              child:
+                                  state.isPhotoUploading
+                                      ? Shimmer.fromColors(
+                                        baseColor: AppColors.primary
+                                            .withOpacity(0.3),
+                                        highlightColor: AppColors.accent,
+                                        child: const CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          radius: 60,
+                                        ),
+                                      )
+                                      : CircleAvatar(
+                                        radius: 60,
+                                        backgroundColor: AppColors.accent,
+                                        backgroundImage:
+                                            profile.photoUrl != null
+                                                ? NetworkImage(
+                                                  profile.photoUrl!,
+                                                )
+                                                : null,
+                                        child:
+                                            profile.photoUrl == null
+                                                ? Text(
+                                                  profile.fullName
+                                                      .split(' ')
+                                                      .map((e) => e[0])
+                                                      .take(2)
+                                                      .join()
+                                                      .toUpperCase(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                        color:
+                                                            AppColors.primary,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                )
+                                                : null,
+                                      ),
                             ),
                             Positioned(
                               bottom: 0,
@@ -199,7 +240,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ],
                           ),
                           padding: const EdgeInsets.all(20),
-                          child:  Column(
+                          child: Column(
                             children: [
                               CustomTextfield(
                                 label: 'Full Name',
@@ -217,7 +258,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               CustomTextfield(
                                 label: 'Phone',
                                 prefixIcon: Icons.phone_outlined,
-                               controller: _phoneController,
+                                controller: _phoneController,
                               ),
                             ],
                           ),
@@ -258,10 +299,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(height: 32),
                         CustomButton(
                           text: 'Save Changes',
-                          onPressed: () {
-                            Get.back();
-                          },
+                          onPressed: _handleSave,
                           icon: Icons.check_circle_outline,
+                          isLoading: state.isLoading,
                         ),
                       ],
                     ),
