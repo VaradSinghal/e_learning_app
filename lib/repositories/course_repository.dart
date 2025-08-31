@@ -19,4 +19,25 @@ class CourseRepository {
       throw Exception('Failed to create course: $e');
     }
   }
+
+  Future<List<Course>> getInstructorCourses(String instructorId) async {
+    try {
+      final querySnapshot =
+          await _firestore
+              .collection('courses')
+              .where('instructorId', isEqualTo: instructorId)
+              .get();
+
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>?;
+
+        if (data == null) {
+          throw Exception('Course data is null');
+        }
+        return Course.fromJson({...data, 'id': doc.id});
+      }).toList();
+    } catch (e) {
+      throw Exception('Failed to fetch courses: $e');
+    }
+  }
 }
