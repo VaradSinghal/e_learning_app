@@ -54,4 +54,20 @@ class CourseRepository {
       throw Exception('Failed to update course: $e');
     }
   }
+
+  Future<void> deleteCourse(String courseId) async{
+    try {
+      await _firestore.collection('courses').doc(courseId).delete();
+
+      final enrollmentsSnapshot = await _firestore.collection('enrollments')
+          .where('courseId', isEqualTo: courseId)
+          .get();
+
+      for (var doc in enrollmentsSnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (e) {
+      throw Exception('Failed to delete course: $e');
+    }
+  }
 }

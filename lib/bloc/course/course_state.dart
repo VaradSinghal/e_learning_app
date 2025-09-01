@@ -35,3 +35,9 @@ class OfflineCoursesLoaded extends CourseState {
 
   OfflineCoursesLoaded(this.courses);
 }
+
+class CourseDeleted extends CourseState {
+  final String message;
+
+  CourseDeleted(this.message); 
+}

@@ -9,9 +9,25 @@ import 'package:e_learning_app/views/teacher/my_courses/widgets/shimmer_course_c
 import 'package:e_learning_app/views/teacher/my_courses/widgets/teacher_course_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class MyCoursesScreen extends StatelessWidget {
+class MyCoursesScreen extends StatefulWidget {
   const MyCoursesScreen({super.key});
+
+  @override
+  State<MyCoursesScreen> createState() => _MyCoursesScreenState();
+}
+
+class _MyCoursesScreenState extends State<MyCoursesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final userService = UserService();
+    final instructorId = userService.getCurrentUserId();
+    if (instructorId != null) {
+      context.read<CourseBloc>().add(UpdateCourse(instructorId));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +37,18 @@ class MyCoursesScreen extends StatelessWidget {
     if (instructorId == null) {
       return const Center(child: Text('User not logged in'));
     }
-    return BlocBuilder<CourseBloc, CourseState>(
+    return BlocConsumer<CourseBloc, CourseState>(
+      listener: (context, state) {
+        if (state is CourseDeleted) {
+          Fluttertoast.showToast(msg: state.message,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
+      },
       builder: (context, state) {
         if (state is CourseLoading) {
           return Scaffold(

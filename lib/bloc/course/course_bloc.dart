@@ -20,6 +20,7 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
     on<LoadEnrolledCourses>(_onLoadEnrolledCourses);
     on<LoadOfflineCourses>(_onLoadOfflineCourses);
     on<UpdateCourse>(_onUpdateCourse);
+    on<DeleteCourse>(_onDeleteCourse);
   }
 
   Future<void> _onLoadCourses(
@@ -42,7 +43,6 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
     Emitter<CourseState> emit,
   ) async {}
 
-
   Future<void> _onLoadOfflineCourses(
     LoadOfflineCourses event,
     Emitter<CourseState> emit,
@@ -54,9 +54,27 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
   ) async {
     emit(CourseLoading());
     try {
-      final courses = await _courseRepository.getInstructorCourses(event.instructorId);
+      final courses = await _courseRepository.getInstructorCourses(
+        event.instructorId,
+      );
       emit(CoursesLoaded(courses));
-      
+    } catch (e) {
+      emit(CourseError(e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteCourse(
+    DeleteCourse event,
+    Emitter<CourseState> emit,
+  ) async {
+    try {
+      await _courseRepository.deleteCourse(event.courseId);
+      final userId = _authBloc.state.userModel?.uid;
+      if (userId != null) {
+        final courses = await _courseRepository.getInstructorCourses(userId);
+        emit(CourseDeleted('Course deleted successfully'));
+        emit(CoursesLoaded(courses));
+      }
     } catch (e) {
       emit(CourseError(e.toString()));
     }
