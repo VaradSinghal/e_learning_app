@@ -1,12 +1,42 @@
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/models/review.dart';
+import 'package:e_learning_app/repositories/review_repository.dart';
 import 'package:e_learning_app/views/course/course_detail/widgets/review_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class ReviewsSection extends StatelessWidget {
+class ReviewsSection extends StatefulWidget {
   final String courseId;
   const ReviewsSection({super.key, required this.courseId});
+
+  @override
+  State<ReviewsSection> createState() => _ReviewsSectionState();
+}
+
+class _ReviewsSectionState extends State<ReviewsSection> {
+  final ReviewRepository _reviewRepository = ReviewRepository();
+  List<Review> _reviews = [];
+  bool _isLoading = false;
+
+  initState() {
+    super.initState();
+    _loadReviews();
+  }
+
+  Future<void> _loadReviews() async {
+    try {
+      final reviews = await _reviewRepository.getCourseReviews(widget.courseId);
+      setState(() {
+        _reviews = reviews;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,41 +55,75 @@ class ReviewsSection extends StatelessWidget {
               ),
             ),
             TextButton.icon(
-              onPressed: () async {
-                final result = await Get.dialog<Map<String, dynamic>>(
-                  ReviewDialog(courseId: courseId),
-                );
-                if (result != null) {
-                  Get.snackbar(
-                    'Success', 
-                    'Thank you for your review',
-                    backgroundColor:AppColors.primary,
-                    colorText: Colors.white,
-                    );
-                }
-              },
+              onPressed: () async {},
               label: const Text('Write a Review'),
               icon: const Icon(Icons.rate_review),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return _buildReviewTile(
-              context,
-              name: 'User ${index + 1}',
-              rating: 4.5,
-              comment: 'Great course! Very informative and well-structured',
-              date: '2 days ago',
-            );
-          },
-        ),
+        if (_isLoading)
+          const Center(child: CircularProgressIndicator())
+        else if (_reviews.isEmpty)
+          Center(
+            child: Column(
+              children: [
+                Icon(
+                  Icons.reviews_outlined,
+                  size: 48,
+                  color: AppColors.secondary.withOpacity(0.5),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'No reviews yet',
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: AppColors.secondary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Be the first one to review this course',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.secondary.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _reviews.length,
+            itemBuilder: (context, index) {
+              final review = _reviews[index];
+              return _buildReviewTile(
+                context,
+                name: review.userName,
+                rating: review.rating,
+                comment: review.comment,
+                date: _formatDate(review.createdAt),
+              );
+            },
+          ),
       ],
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if(difference.inDays == 0){
+      if(difference.inHours ==0){
+        return '${difference.inMinutes} minutes ago';
+      }
+      return '${difference.inHours} hours ago';
+    } else if (difference.inDays < 7){
+      return '${difference.inDays} days ago';
+    } else {
+      return '${date.day}/${date.month}/${date.year}';
+    }
   }
 
   Widget _buildReviewTile(

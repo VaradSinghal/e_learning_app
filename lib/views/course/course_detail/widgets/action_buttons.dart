@@ -8,8 +8,13 @@ import 'package:get/utils.dart';
 
 class ActionButtons extends StatelessWidget {
   final Course course;
+  final bool isUnlocked;
 
-  const ActionButtons({super.key, required this.course});
+  const ActionButtons({
+    super.key,
+    required this.course,
+    required this.isUnlocked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +23,14 @@ class ActionButtons extends StatelessWidget {
         Expanded(
           child: ElevatedButton.icon(
             onPressed: () {
-              if (course.isPremium &&
-                  !DummyDataService.isCourseUnlocked(course.id)) {
+              if (course.isPremium && !isUnlocked) {
                 Get.toNamed(
                   AppRoutes.payment,
                   arguments: {
-                    'courseId' : course.id,
-                    'courseName' : course.title,
-                    'price' : course.price,
-                  }
+                    'courseId': course.id,
+                    'courseName': course.title,
+                    'price': course.price,
+                  },
                 );
               } else {
                 Get.toNamed(
@@ -40,16 +44,17 @@ class ActionButtons extends StatelessWidget {
           ),
         ),
 
-        if (!course.isPremium ||
-            DummyDataService.isCourseUnlocked(course.id)) ...{
+        if (!course.isPremium || isUnlocked) ...{
           const SizedBox(width: 16),
           IconButton(
-            onPressed: () => Get.to(() => ChatScreen(
-              courseId: course.id, 
-              instructorId: course.instructorId, 
-              isTeacherView: false,
-              ),
-              ),
+            onPressed:
+                () => Get.to(
+                  () => ChatScreen(
+                    courseId: course.id,
+                    instructorId: course.instructorId,
+                    isTeacherView: false,
+                  ),
+                ),
             icon: const Icon(Icons.chat),
           ),
         },
