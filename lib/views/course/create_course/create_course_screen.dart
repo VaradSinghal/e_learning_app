@@ -56,7 +56,7 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
   Map<int, bool> _isUploadingVideo = {};
   Map<int, bool> _isUploadingResource = {};
   List<PrerequisiteCourse> _availableCourses = [];
-  List<String> _selectedPrerequisites = [];
+  final List<String> _selectedPrerequisites = [];
   Map<int, VideoPlayerController?> _videoControllers = {};
   Map<int, ChewieController?> _chewieControllers = {};
 
@@ -245,31 +245,33 @@ class _CreateCourseScreenState extends State<CreateCourseScreen> {
             ],
           ),
 
-          if(_isLoading)
-          Center(
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    offset: Offset(0, 5)
+          if (_isLoading)
+            Center(
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 3,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
                   ),
-                ],
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                 ),
               ),
             ),
-          )
         ],
       ),
     );
