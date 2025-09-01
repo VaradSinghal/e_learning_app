@@ -26,7 +26,19 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
   Future<void> _onLoadCourses(
     LoadCourses event,
     Emitter<CourseState> emit,
-  ) async {}
+  ) async {
+    emit(CourseLoading());
+
+    try {
+      final courses = await _courseRepository.getCourses(
+        categoryId: event.categoryId,
+      );
+      emit(CoursesLoaded(courses));
+      
+    } catch (e) {
+      emit(CourseError(e.toString()));
+    }
+  }
 
   Future<void> _onLoadCourseDetail(
     LoadCourseDetail event,
