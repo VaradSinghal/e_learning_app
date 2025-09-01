@@ -14,8 +14,16 @@ class CourseError extends CourseState {
 
 class CoursesLoaded extends CourseState {
   final List<Course> courses;
+  final Course? selectedCourse;
 
-  CoursesLoaded(this.courses);
+  CoursesLoaded(this.courses, {this.selectedCourse});
+
+  CoursesLoaded copyWith({List<Course>? courses, Course? selectedCourse}) {
+    return CoursesLoaded(
+      courses ?? this.courses,
+      selectedCourse: selectedCourse ?? this.selectedCourse,
+    );
+  }
 }
 
 class CourseDetailLoaded extends CourseState {
@@ -39,5 +47,5 @@ class OfflineCoursesLoaded extends CourseState {
 class CourseDeleted extends CourseState {
   final String message;
 
-  CourseDeleted(this.message); 
+  CourseDeleted(this.message);
 }

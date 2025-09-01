@@ -35,7 +35,6 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
         categoryId: event.categoryId,
       );
       emit(CoursesLoaded(courses));
-      
     } catch (e) {
       emit(CourseError(e.toString()));
     }
@@ -45,10 +44,22 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
     LoadCourseDetail event,
     Emitter<CourseState> emit,
   ) async {
-    emit(CourseLoading());
+    if (state is CoursesLoaded) {
+      final currentState = state as CoursesLoaded;
+      emit(CoursesLoaded(currentState.courses, selectedCourse: null));
+    } else {
+      emit(CourseLoading());
+    }
     try {
       final course = await _courseRepository.getCourseDetail(event.courseId);
-      emit(CourseDetailLoaded(course));
+      if (state is CoursesLoaded) {
+        final currentState = state as CoursesLoaded;
+        emit(currentState.copyWith(selectedCourse: course));
+      } else {
+        final courses = await _courseRepository.getCourses();
+        emit(CoursesLoaded(courses, selectedCourse: course));
+      }
+
     } catch (e) {
       emit(CourseError(e.toString()));
     }
@@ -59,18 +70,16 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
     Emitter<CourseState> emit,
   ) async {}
 
-Future<void> _onRefreshCourseDetail(
-  RefreshCourseDetail event,
-  Emitter<CourseState> emit,
+  Future<void> _onRefreshCourseDetail(
+    RefreshCourseDetail event,
+    Emitter<CourseState> emit,
   ) async {
     try {
-      if(state is CourseDetailLoaded){
+      if (state is CourseDetailLoaded) {
         final course = await _courseRepository.getCourseDetail(event.courseId);
         emit(CourseDetailLoaded(course));
       }
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   Future<void> _onLoadEnrolledCourses(

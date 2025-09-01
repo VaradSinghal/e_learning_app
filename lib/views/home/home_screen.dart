@@ -5,6 +5,7 @@ import 'package:e_learning_app/views/home/widgets/home_app_bar.dart';
 import 'package:e_learning_app/views/home/widgets/in_progress_section.dart';
 import 'package:e_learning_app/views/home/widgets/recommended_section.dart';
 import 'package:e_learning_app/views/home/widgets/search_bar_widget.dart';
+import 'package:e_learning_app/views/home/widgets/shimmer_category_section.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SearchBarWidget(),
               const SizedBox(height: 32),
               _isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const ShimmerCategorySection()
                   : CategorySection(categories: _categories),
               const SizedBox(height: 32),
               const InProgressSection(),

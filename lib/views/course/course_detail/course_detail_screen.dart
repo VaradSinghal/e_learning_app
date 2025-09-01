@@ -40,7 +40,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
     return BlocBuilder<CourseBloc, CourseState>(
       builder: (context, state) {
-        if (state is CourseLoading) {
+        if (state is CourseLoading || (state is CoursesLoaded && state.selectedCourse == null)) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -53,8 +53,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           );
         }
 
-        if (state is CourseDetailLoaded) {
-          final course = state.course;
+        if (state is CoursesLoaded && state.selectedCourse != null) {
+          final course = state.selectedCourse!;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (lastLesson != null) {}
           });
