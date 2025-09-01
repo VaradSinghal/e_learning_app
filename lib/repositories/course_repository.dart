@@ -40,4 +40,18 @@ class CourseRepository {
       throw Exception('Failed to fetch courses: $e');
     }
   }
+
+  Future<void> updateCourse(Course course) async {
+    try {
+      final courseData = course.toJson();
+      final lessonsData = course.lessons.map((lesson) => lesson.toJson()).toList();
+
+      await _firestore.collection('courses').doc(course.id).update({
+        ...courseData,
+        'lessons': lessonsData,
+      });
+    } catch (e) {
+      throw Exception('Failed to update course: $e');
+    }
+  }
 }
