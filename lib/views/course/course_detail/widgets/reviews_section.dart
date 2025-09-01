@@ -1,10 +1,16 @@
+import 'package:e_learning_app/bloc/course/course_bloc.dart';
+import 'package:e_learning_app/bloc/course/course_event.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
 import 'package:e_learning_app/models/review.dart';
 import 'package:e_learning_app/repositories/review_repository.dart';
 import 'package:e_learning_app/views/course/course_detail/widgets/review_dialog.dart';
+import 'package:e_learning_app/views/course/course_detail/widgets/shimmer_review_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 class ReviewsSection extends StatefulWidget {
   final String courseId;
@@ -18,6 +24,8 @@ class _ReviewsSectionState extends State<ReviewsSection> {
   final ReviewRepository _reviewRepository = ReviewRepository();
   List<Review> _reviews = [];
   bool _isLoading = false;
+  final _auth = FirebaseAuth.instance;
+  String? _error;
 
   initState() {
     super.initState();
@@ -25,22 +33,158 @@ class _ReviewsSectionState extends State<ReviewsSection> {
   }
 
   Future<void> _loadReviews() async {
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
     try {
       final reviews = await _reviewRepository.getCourseReviews(widget.courseId);
+      if (!mounted) return;
       setState(() {
         _reviews = reviews;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
+        _error = 'Failed to load reviews';
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _showReviewDialog([Review? existingReview]) async {
+    final result = await Get.dialog<Map<String, dynamic>>(
+      ReviewDialog(
+        courseId: widget.courseId,
+        key: UniqueKey(),
+        existingReview: existingReview,
+      ),
+      barrierDismissible: false,
+    );
+
+    if (result != null) {
+      await _handleReviewAction(result);
+    }
+  }
+
+  Future<void> _handleReviewAction(Map<String, dynamic> result) async {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) {
+      Get.snackbar(
+        'Error',
+        'Please sign in to review',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    setState(() => _isLoading = true);
+
+    try {
+      final action = result['action'] as String;
+
+      final existingReview = _reviews.firstWhereOrNull(
+        (review) => review.userId == currentUser.uid,
+      );
+
+      switch (action) {
+        case 'add':
+          if (existingReview != null) {
+            Get.snackbar(
+              'Error',
+              'You have already reviewed this course',
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+            setState(() => _isLoading = false);
+            return;
+          }
+          final rating = (result['rating'] as num).toDouble();
+          final comment = result['comment'] as String;
+
+          final newReview = Review(
+            id: '',
+            courseId: widget.courseId,
+            userId: currentUser.uid,
+            userName: currentUser.displayName ?? 'Anonymous',
+            rating: rating,
+            comment: comment,
+            createdAt: DateTime.now(),
+          );
+          await _reviewRepository.addReview(newReview);
+          break;
+
+        case 'update':
+          if (existingReview != null) {
+            final rating = (result['rating'] as num).toDouble();
+            final comment = result['comment'] as String;
+
+            final updatedReview = Review(
+              id: existingReview.id,
+              courseId: widget.courseId,
+              userId: currentUser.uid,
+              userName: currentUser.displayName ?? 'Anonymous',
+              rating: rating,
+              comment: comment,
+              createdAt: DateTime.now(),
+            );
+            await _reviewRepository.updateReview(updatedReview);
+          }
+          break;
+
+        case 'delete':
+          if (existingReview != null) {
+            await _reviewRepository.deleteReview(existingReview.id);
+          }
+          break;
+      }
+      await _loadReviews();
+
+      context.read<CourseBloc>().add(RefreshCourseDetail(widget.courseId));
+
+      Get.snackbar(
+        'Success',
+        _getSuccessMessage(action),
+        backgroundColor: AppColors.primary,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      setState(() => _isLoading = false);
+      Get.snackbar(
+        'Error',
+        'Failed to ${result['action']} review',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  String _getSuccessMessage(String action) {
+    switch (action) {
+      case 'add':
+        return 'Thank you for your review';
+      case 'update':
+        return 'Review updated successfully';
+      case 'delete':
+        return 'Review deleted successfully';
+      default:
+        return 'Action completed successfully';
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final currentUser = _auth.currentUser;
+    final userReview =
+        currentUser != null
+            ? _reviews.firstWhereOrNull(
+              (review) => review.userId == currentUser.uid,
+            )
+            : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,15 +199,31 @@ class _ReviewsSectionState extends State<ReviewsSection> {
               ),
             ),
             TextButton.icon(
-              onPressed: () async {},
-              label: const Text('Write a Review'),
+              onPressed:
+                  _isLoading ? null : () => _showReviewDialog(userReview),
+              label: Text(
+                userReview != null ? 'Edit Review' : 'Write a Review',
+              ),
               icon: const Icon(Icons.rate_review),
             ),
           ],
         ),
         const SizedBox(height: 16),
         if (_isLoading)
-          const Center(child: CircularProgressIndicator())
+          Column(children: List.generate(3, (index) => ShimmerReviewTile(),
+          ),
+          )
+        else if (_error != null)
+          Center(
+            child: Column(
+              children: [
+                const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                const SizedBox(height: 16),
+                Text(_error!, style: theme.textTheme.bodyLarge),
+                TextButton(onPressed: _loadReviews, child: const Text('Retry')),
+              ],
+            ),
+          )
         else if (_reviews.isEmpty)
           Center(
             child: Column(
@@ -99,10 +259,8 @@ class _ReviewsSectionState extends State<ReviewsSection> {
               final review = _reviews[index];
               return _buildReviewTile(
                 context,
-                name: review.userName,
-                rating: review.rating,
-                comment: review.comment,
-                date: _formatDate(review.createdAt),
+                review: review,
+                isCurrentUserReview: currentUser?.uid == review.userId,
               );
             },
           ),
@@ -114,12 +272,12 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     final now = DateTime.now();
     final difference = now.difference(date);
 
-    if(difference.inDays == 0){
-      if(difference.inHours ==0){
+    if (difference.inDays == 0) {
+      if (difference.inHours == 0) {
         return '${difference.inMinutes} minutes ago';
       }
       return '${difference.inHours} hours ago';
-    } else if (difference.inDays < 7){
+    } else if (difference.inDays < 7) {
       return '${difference.inDays} days ago';
     } else {
       return '${date.day}/${date.month}/${date.year}';
@@ -128,10 +286,8 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
   Widget _buildReviewTile(
     BuildContext context, {
-    required String name,
-    required double rating,
-    required String comment,
-    required String date,
+    required Review review,
+    required bool isCurrentUserReview,
   }) {
     final theme = Theme.of(context);
 
@@ -157,7 +313,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
               CircleAvatar(
                 backgroundColor: AppColors.primary,
                 child: Text(
-                  name[0],
+                  review.userName[0],
                   style: theme.textTheme.titleMedium?.copyWith(
                     color: Colors.white,
                   ),
@@ -169,7 +325,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      name,
+                      review.userName,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -178,14 +334,16 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                       children: [
                         ...List.generate(5, (index) {
                           return Icon(
-                            index < rating ? Icons.star : Icons.star_border,
+                            index < review.rating
+                                ? Icons.star
+                                : Icons.star_border,
                             size: 16,
                             color: AppColors.primary,
                           );
                         }),
                         const SizedBox(width: 8),
                         Text(
-                          date,
+                          _formatDate(review.createdAt),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: AppColors.secondary,
                           ),
@@ -195,9 +353,14 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                   ],
                 ),
               ),
+              if (isCurrentUserReview)
+                IconButton(
+                  onPressed: () => _showReviewDialog(review),
+                  icon: const Icon(Icons.more_vert),
+                ),
             ],
           ),
-          Text(comment, style: theme.textTheme.bodyMedium),
+          Text(review.comment, style: theme.textTheme.bodyMedium),
         ],
       ),
     );

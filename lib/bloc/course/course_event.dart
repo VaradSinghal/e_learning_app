@@ -9,7 +9,11 @@ class LoadCourseDetail extends CourseEvent {
   final String courseId;
   LoadCourseDetail(this.courseId);
 }
-
+class RefreshCourseDetail extends CourseEvent {
+  final String courseId;
+  
+  RefreshCourseDetail(this.courseId);
+}
 class EnrollCourse extends CourseEvent {
   final String courseId;
   EnrollCourse(this.courseId);
