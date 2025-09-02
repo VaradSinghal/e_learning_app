@@ -30,7 +30,7 @@ class OverViewCardsWidget extends StatelessWidget {
         ),
         _buildStatCard(
           'Total Revenue',
-          '\$${stats.totalRevenue.toStringAsFixed(2)}',
+          '₹${stats.totalRevenue.toStringAsFixed(2)}',
           Icons.attach_money,
         ),
         _buildStatCard(
@@ -68,34 +68,30 @@ class OverViewCardsWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                Icon(
-                  icon,
-                  color: AppColors.primary,
-                  size: iconSize,
-                ),
-                const SizedBox(height: 8),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: valueFontSize,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 4),
+              Icon(icon, color: AppColors.primary, size: iconSize),
+              const SizedBox(height: 8),
               FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: titleFontSize,
-                    ),
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: valueFontSize,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+              ),
+              const SizedBox(height: 4),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: titleFontSize,
+                  ),
+                ),
+              ),
             ],
           ),
         );

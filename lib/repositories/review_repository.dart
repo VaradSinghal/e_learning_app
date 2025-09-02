@@ -60,9 +60,10 @@ class ReviewRepository {
       final reviews = await getCourseReviews(courseId);
       if (reviews.isEmpty) {
         await _firestore.collection('courses').doc(courseId).update({
-          'averageRating': 0.0,
+          'rating': 0.0,
           'reviewCount': 0,
         });
+        return;
       }
 
       double totalRating = 0;
@@ -72,7 +73,7 @@ class ReviewRepository {
       final averageRating = totalRating / reviews.length;
 
       await _firestore.collection('courses').doc(courseId).update({
-        'averageRating': averageRating,
+        'rating': averageRating,
         'reviewCount': reviews.length,
       });
     } catch (e) {}

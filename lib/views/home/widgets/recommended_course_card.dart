@@ -21,9 +21,9 @@ class RecommendedCourseCard extends StatelessWidget {
     required this.imageUrl,
     required this.instrucutorName,
     this.isPremium = false,
-    required this.rating ,
+    required this.rating,
     required this.reviewCount,
-    required this.price ,
+    required this.price,
     required this.onTap,
   });
 
@@ -45,7 +45,7 @@ class RecommendedCourseCard extends StatelessWidget {
             ),
           ],
         ),
-      
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,11 +93,7 @@ class RecommendedCourseCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            Icons.star,
-                            color: Colors.white,
-                            size: 12,
-                          ),
+                          const Icon(Icons.star, color: Colors.white, size: 12),
                           const SizedBox(width: 2),
                           Text(
                             'PRO',
@@ -140,9 +136,9 @@ class RecommendedCourseCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                         instrucutorName,
-                         maxLines: 1,
-                         overflow: TextOverflow.ellipsis,
+                          instrucutorName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AppColors.secondary),
                         ),
@@ -171,12 +167,12 @@ class RecommendedCourseCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      '\$${price.toStringAsFixed(2)}',
+                      '₹${price.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.bold,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

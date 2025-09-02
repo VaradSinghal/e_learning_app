@@ -29,7 +29,7 @@ class Review {
         } else if (value is int) {
           return DateTime.fromMillisecondsSinceEpoch(value * 1000);
         }
-        throw Exception('Invalid date format');
+        throw Exception('Invalid date format: $value' );
       }
 
       if (json['courseId'] == null) throw Exception('courseId is required');
@@ -40,7 +40,7 @@ class Review {
       if (json['createdAt'] == null) throw Exception('createdAt is required');
 
       return Review(
-        id: json['id'] as String ?? '',
+        id: json['id'] as String? ?? '',
         courseId: json['courseId'] as String,
         userId: json['userId'] as String,
         userName: json['userName'] as String,

@@ -15,22 +15,33 @@ class TeacherCourseCard extends StatelessWidget {
 
   const TeacherCourseCard({super.key, required this.course});
 
-  void _showDeleteConfirmation(BuildContext context){
+  void _showDeleteConfirmation(BuildContext context) {
     showDialog(
-      context: context, 
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Course'),
-        content: Text('Are your sure you want to delete the course.This action can\'t be undone.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(
-            onPressed: () { Navigator.pop(context);
-            context.read<CourseBloc>().add(DeleteCourse(course.id));
-            },
-          child: const Text('Delete',style: TextStyle(color: Colors.red),)),
-        ],
-      ),
-      );
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Delete Course'),
+            content: Text(
+              'Are your sure you want to delete the course.This action can\'t be undone.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<CourseBloc>().add(DeleteCourse(course.id));
+                },
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -154,7 +165,7 @@ class TeacherCourseCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '\$${course.price}',
+                          '₹${course.price}',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -173,14 +184,13 @@ class TeacherCourseCard extends StatelessWidget {
                               label: const Text('Edit'),
                             ),
                             TextButton.icon(
-                              onPressed: ()=> _showDeleteConfirmation(context),
-                              icon: const Icon(Icons.delete, color: Colors.red,),
+                              onPressed: () => _showDeleteConfirmation(context),
+                              icon: const Icon(Icons.delete, color: Colors.red),
                               label: const Text(
                                 'Delete',
-                                style: TextStyle(
-                                  color: Colors.red
-                                )),
+                                style: TextStyle(color: Colors.red),
                               ),
+                            ),
                           ],
                         ),
                       ],

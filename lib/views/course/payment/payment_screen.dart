@@ -63,14 +63,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             const SizedBox(height: 24),
             CustomButton(
-              text: 'Pay \$${widget.price}',
+              text: 'Pay ₹${widget.price}',
               onPressed:
                   () => PaymentService.processPayment(
                     formKey: _formKey,
                     courseId: widget.courseId,
                   ),
-                  isLoading: false,
-                  height: 56,
+              isLoading: false,
+              height: 56,
             ),
           ],
         ),

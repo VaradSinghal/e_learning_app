@@ -103,7 +103,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
             return;
           }
           final rating = (result['rating'] as num).toDouble();
-          final comment = result['comment'] as String;
+          final comment = result['review'] as String;
 
           final newReview = Review(
             id: '',
@@ -120,7 +120,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
         case 'update':
           if (existingReview != null) {
             final rating = (result['rating'] as num).toDouble();
-            final comment = result['comment'] as String;
+            final comment = result['review'] as String;
 
             final updatedReview = Review(
               id: existingReview.id,
