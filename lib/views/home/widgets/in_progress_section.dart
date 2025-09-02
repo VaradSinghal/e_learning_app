@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/l10n/l10n.dart';
 import 'package:e_learning_app/services/dummy_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,7 @@ class InProgressSection extends StatelessWidget {
       children: [
         if (inProgressCourses.isNotEmpty)
           Text(
-            'In Progress',
+            S.of(context)!.inProgress,
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -114,7 +115,7 @@ class InProgressSection extends StatelessWidget {
 
                                     const SizedBox(height: 8),
                                     Text(
-                                      'Progress: ${(progress * 100).toInt()}%',
+                                      S.of(context)!.progressPercent((progress * 100).toInt()),
                                       style: theme.textTheme.bodyMedium
                                           ?.copyWith(
                                             color: AppColors.secondary,

@@ -1,6 +1,7 @@
 import 'package:e_learning_app/bloc/navigation/navigation_bloc.dart';
 import 'package:e_learning_app/bloc/navigation/navigation_state.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/l10n/l10n.dart';
 import 'package:e_learning_app/views/course/course_list/course_list_screen.dart';
 import 'package:e_learning_app/views/home/home_screen.dart';
 import 'package:e_learning_app/views/profile/profile_screen.dart';
@@ -16,9 +17,9 @@ class MainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) => NavigationBloc()..add(NavigateToTab(initialIndex ?? 0)),
-      child: BlocBuilder<NavigationBloc,NavigationState>(
+      create: (context) =>
+          NavigationBloc()..add(NavigateToTab(initialIndex ?? 0)),
+      child: BlocBuilder<NavigationBloc, NavigationState>(
         builder: (context, state) {
           return Scaffold(
             backgroundColor: AppColors.lightBackground,
@@ -31,32 +32,31 @@ class MainScreen extends StatelessWidget {
                 const ProfileScreen(),
               ],
             ),
-            bottomNavigationBar: NavigationBar( 
+            bottomNavigationBar: NavigationBar(
               backgroundColor: AppColors.accent,
               indicatorColor: AppColors.primary.withOpacity(0.1),
-              destinations:const [
+              destinations: [
                 NavigationDestination(
-                  icon: Icon(Icons.home_outlined), 
-                  selectedIcon: Icon(Icons.home),
-                  label: 'Home',
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: const Icon(Icons.home),
+                  label: S.of(context)!.navHome,
                 ),
-                 NavigationDestination(
-                  icon: Icon(Icons.play_lesson_outlined), 
-                  selectedIcon: Icon(Icons.play_lesson),
-                  label: 'My Courses',
+                NavigationDestination(
+                  icon: const Icon(Icons.play_lesson_outlined),
+                  selectedIcon: const Icon(Icons.play_lesson),
+                  label: S.of(context)!.navCourses,
                 ),
-                 NavigationDestination(
-                  icon: Icon(Icons.quiz_outlined), 
-                  selectedIcon: Icon(Icons.quiz),
-                  label: 'Quizzes',
+                NavigationDestination(
+                  icon: const Icon(Icons.quiz_outlined),
+                  selectedIcon: const Icon(Icons.quiz),
+                  label: S.of(context)!.navQuizzes,
                 ),
-                 NavigationDestination(
-                  icon: Icon(Icons.person_outline), 
-                  selectedIcon: Icon(Icons.person),
-                  label: 'Profile',
+                NavigationDestination(
+                  icon: const Icon(Icons.person_outline),
+                  selectedIcon: const Icon(Icons.person),
+                  label: S.of(context)!.navProfile,
                 ),
               ],
-
               selectedIndex: state.currentIndex,
               onDestinationSelected: (index) {
                 context.read<NavigationBloc>().add(NavigateToTab(index));

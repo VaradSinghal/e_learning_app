@@ -1,6 +1,7 @@
 import 'package:e_learning_app/bloc/profile/profile_bloc.dart';
 import 'package:e_learning_app/bloc/profile/profile_state.dart';
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/l10n/l10n.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,13 +38,13 @@ class HomeAppBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome Back',
+                   S.of(context)!.welcomeBack,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: AppColors.accent.withOpacity(0.7),
                   ),
                 ),
                 Text(
-                  profile?.fullName ?? 'Loading...',
+                  profile?.fullName ?? S.of(context)!.loading,
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: AppColors.accent,
                     fontWeight: FontWeight.bold,

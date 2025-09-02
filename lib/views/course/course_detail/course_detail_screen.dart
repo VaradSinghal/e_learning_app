@@ -22,15 +22,38 @@ class CourseDetailScreen extends StatefulWidget {
   State<CourseDetailScreen> createState() => _CourseDetailScreenState();
 }
 
-class _CourseDetailScreenState extends State<CourseDetailScreen> {
-  final CourseRepository _courseRepository = CourseRepository();
-
+class _CourseDetailScreenState extends State<CourseDetailScreen>
+    with RouteAware {
   bool _isUnlocked = false;
+
+  final RouteObserver<PageRoute> _routeObserver =
+      Get.find<RouteObserver<PageRoute>>();
 
   @override
   void initState() {
     super.initState();
+    _loadCourseDetails();
+  }
+
+  void _loadCourseDetails() {
     context.read<CourseBloc>().add(LoadCourseDetail(widget.courseId));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute);
+  }
+
+  @override
+  void dispose() {
+    _routeObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    _loadCourseDetails();
   }
 
   @override
@@ -40,7 +63,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
     return BlocBuilder<CourseBloc, CourseState>(
       builder: (context, state) {
-        if (state is CourseLoading || (state is CoursesLoaded && state.selectedCourse == null)) {
+        if (state is CourseLoading ||
+            (state is CoursesLoaded && state.selectedCourse == null)) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -167,9 +191,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           );
         }
         return const Scaffold(
-          body: Center(
-            child: Text('Something went wrong'),
-          ),
+          body: Center(child: Text('Something went wrong')),
         );
       },
     );

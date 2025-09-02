@@ -1,0 +1,24 @@
+{
+  "appTitle": "ई-लर्निंग ऐप",
+  "welcome": "स्वागत है {name}",
+  "navHome": "होम",
+  "navCourses": "मेरे पाठ्यक्रम",
+  "navQuizzes": "प्रश्नोत्तरी",
+  "navProfile": "प्रोफ़ाइल",
+   "welcomeBack": "वापसी पर स्वागत है",
+  "loading": "लोड हो रहा है...",
+  "categories": "श्रेणियाँ",
+  "courses": "{count} पाठ्यक्रम",
+  "searchCourses": "पाठ्यक्रम खोजें...",
+  "inProgress": "प्रगति में",
+  "progressPercent": "प्रगति: {percent}%",
+  "proLabel": "प्रो",
+  "recommended": "सिफ़ारिश की गई",
+  "seeAll": "सभी देखें",
+  "noCoursesAvailable": "कोई पाठ्यक्रम उपलब्ध नहीं",
+  "unknownInstructor": "अज्ञात प्रशिक्षक",
+  "error": "त्रुटि: {message}",
+   "recommendedCourses": "सिफ़ारिश किए गए पाठ्यक्रम"
+
+}
+

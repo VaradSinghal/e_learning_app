@@ -1,4 +1,5 @@
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/l10n/l10n.dart';
 import 'package:e_learning_app/views/home/widgets/shimmer_category_card.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class ShimmerCategorySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Categories',
+          S.of(context)!.categories,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.bold

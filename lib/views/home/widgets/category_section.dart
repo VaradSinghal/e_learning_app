@@ -1,4 +1,5 @@
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/l10n/l10n.dart';
 import 'package:e_learning_app/models/category.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class CategorySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Categories',
+           S.of(context)!.categories,
           style: theme.textTheme.titleLarge?.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.bold,
@@ -75,7 +76,7 @@ class CategorySection extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '${category.courseCount} Courses',
+                  S.of(context)!.courses(category.courseCount),
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: AppColors.secondary),

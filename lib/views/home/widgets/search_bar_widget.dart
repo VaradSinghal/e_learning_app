@@ -1,4 +1,5 @@
 import 'package:e_learning_app/core/theme/app_colors.dart';
+import 'package:e_learning_app/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatelessWidget {
@@ -23,7 +24,7 @@ class SearchBarWidget extends StatelessWidget {
         color: Colors.transparent,
         child: TextField(
             decoration: InputDecoration(
-              hintText: 'Search courses...',
+               hintText: S.of(context)!.searchCourses,
               hintStyle: TextStyle(color: AppColors.secondary.withOpacity(0.7)),
               prefixIcon: Icon(Icons.search, color: AppColors.secondary),
               border: OutlineInputBorder(

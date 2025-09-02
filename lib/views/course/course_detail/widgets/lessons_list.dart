@@ -2,8 +2,8 @@ import 'package:e_learning_app/core/theme/app_colors.dart';
 import 'package:e_learning_app/models/course.dart';
 import 'package:e_learning_app/repositories/course_repository.dart';
 import 'package:e_learning_app/routes/app_routes.dart';
-import 'package:e_learning_app/services/dummy_data_service.dart';
 import 'package:e_learning_app/views/course/course_detail/widgets/lesson_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -26,6 +26,7 @@ class LessonsList extends StatefulWidget {
 
 class _LessonsListState extends State<LessonsList> {
   final CourseRepository _courseRepository = CourseRepository();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   Course? _course;
   bool _isLoading = true;
   Set<String> _completedLessons = {};
@@ -35,26 +36,60 @@ class _LessonsListState extends State<LessonsList> {
     _loadCourse();
   }
 
+  @override
+  void didUpdateWidget(LessonsList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.courseId != widget.courseId ||
+        oldWidget.isUnlocked != widget.isUnlocked) {
+      _loadCourse();
+    }
+  }
+
   Future<void> _loadCourse() async {
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        setState(() {
+          _isLoading = false;
+        });
+        Get.snackbar(
+          'Error',
+          'Please login to view course progress',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
       final course = await _courseRepository.getCourseDetail(widget.courseId);
       final completedLessons = await _courseRepository.getCompletedLessons(
         widget.courseId,
+        user.uid,
       );
-      setState(() {
-        _course = course;
-        _completedLessons = completedLessons;
-        _isLoading = false;
-      });
+
+      if (mounted) {
+        setState(() {
+          _course = course;
+          _completedLessons = completedLessons;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      Get.snackbar(
-        'Error',
-        'Failed to load course lesson',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        Get.snackbar(
+          'Error',
+          'Failed to load course lesson',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
     }
   }
 
@@ -73,18 +108,16 @@ class _LessonsListState extends State<LessonsList> {
       itemCount: _course!.lessons.length,
       itemBuilder: (context, index) {
         final lesson = _course!.lessons[index];
+        final isCompleted = _completedLessons.contains(lesson.id);
         final isLocked =
             !lesson.isPreview &&
             (index > 0 &&
-                !DummyDataService.isLessonCompleted(
-                  _course!.id,
-                  _course!.lessons[index - 1].id,
-                ));
+                !_completedLessons.contains(_course!.lessons[index - 1].id));
 
         return LessonTile(
           title: lesson.title,
           duration: '${lesson.duration} min',
-          isCompleted: DummyDataService.isLessonCompleted(_course!.id, lesson.id),
+          isCompleted: isCompleted,
           isLocked: isLocked,
           isUnlocked: widget.isUnlocked,
           onTap: () async {
@@ -111,6 +144,7 @@ class _LessonsListState extends State<LessonsList> {
               );
 
               if (result == true) {
+                await _loadCourse();
                 widget.onLessonComplete?.call();
               }
             }

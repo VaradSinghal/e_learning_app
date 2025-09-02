@@ -1,0 +1,22 @@
+{
+  "appTitle": "E-Learning App",
+  "welcome": "Welcome {name}",
+  "navHome": "Home",
+  "navCourses": "My Courses",
+  "navQuizzes": "Quizzes",
+  "navProfile": "Profile",
+  "welcomeBack": "Welcome Back",
+  "loading": "Loading...",
+   "categories": "Categories",
+  "courses": "{count} Courses",
+  "searchCourses": "Search courses...",
+  "inProgress": "In Progress",
+  "progressPercent": "Progress: {percent}%",
+   "proLabel": "PRO",
+    "recommended": "Recommended",
+  "seeAll": "See All",
+  "noCoursesAvailable": "No Courses available",
+  "unknownInstructor": "Unknown Instructor",
+  "error": "Error: {message}",
+  "recommendedCourses": "Recommended Courses"
+}
